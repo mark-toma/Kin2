@@ -18,37 +18,22 @@ classdef Kin2 < Kin2_Constants & handle
         colorFL = 1000; % focal length
         colorPPX = 960; % ppx
         colorPPY = 540; % ppy
-        end
-        
-        methods
+    end
+    
+    methods
         function this = Kin2(varargin)
             % Constructor - Create a new C++ class instance
-         
-            % Get the flags
-            depth = ismember('depth',varargin);
-            color = ismember('color',varargin);
-            infrared = ismember('infrared',varargin);
-            bodyIndex = ismember('body_index',varargin);
-            body = ismember('body',varargin);
-            face = ismember('face',varargin);
-            hd_face = ismember('HDface',varargin);
-            flags = uint16(0);
+            %
             
-            % Extract flags values (from Kinect.h)
-            %             FrameSourceTypes_None	= 0,
-            %             FrameSourceTypes_Color	= 0x1,
-            %             FrameSourceTypes_Infrared	= 0x2,
-            %             FrameSourceTypes_Depth	= 0x8,
-            %             FrameSourceTypes_BodyIndex	= 0x10,
-            %             FrameSourceTypes_Body	= 0x20,
-            if color, flags = flags + 1; end
-            if infrared, flags = flags + 2; end
-            if depth, flags = flags + 8; end
-            if bodyIndex, flags = flags + 16; end
-            if body, flags = flags + 32; end
-            if face, flags = flags + 128; end
-            if hd_face, flags = flags + 256; end
+            flags = uint16(0);
+            for spec = varargin
+                inds = strcmp(this.FrameSourceTypes(:,1),spec{:});
+                if ~any(inds), error('Invalid specifier, ''%s''',spec{:}); end
+                flags = flags + this.FrameSourceTypes{inds,2};
+            end
+            
             this.objectHandle = Kin2_mex('new', flags);
+            
         end
         
         function delete(this)
@@ -332,8 +317,8 @@ classdef Kin2 < Kin2_Constants & handle
                 end
                 
                 % Draw the hands
-                this.drawHand(handle, bodies(i).LeftHandState, pos2D(this.JointType_HandLeft,:),handsSize);
-                this.drawHand(handle, bodies(i).RightHandState, pos2D(this.JointType_HandRight,:),handsSize);
+                this.drawHand(handle, bodies(i).LeftHandState, pos2D(this.JointType.HandLeft,:),handsSize);
+                this.drawHand(handle, bodies(i).RightHandState, pos2D(this.JointType.HandRight,:),handsSize);
                 
             end
         end
@@ -346,62 +331,62 @@ classdef Kin2 < Kin2_Constants & handle
             bonesx = zeros(2,24);
             bonesy = zeros(2,24);
             % Torso
-            bonesx(:,1) = [joints(this.JointType_Head,1); joints(this.JointType_Neck,1)];
-            bonesy(:,1) = [joints(this.JointType_Head,2); joints(this.JointType_Neck,2)];
-            bonesx(:,2) = [joints(this.JointType_Neck,1); joints(this.JointType_SpineShoulder,1)];
-            bonesy(:,2) = [joints(this.JointType_Neck,2); joints(this.JointType_SpineShoulder,2)];
-            bonesx(:,3) = [joints(this.JointType_SpineShoulder,1); joints(this.JointType_SpineMid,1)];
-            bonesy(:,3) = [joints(this.JointType_SpineShoulder,2); joints(this.JointType_SpineMid,2)];
-            bonesx(:,4) = [joints(this.JointType_SpineMid,1); joints(this.JointType_SpineBase,1)];
-            bonesy(:,4) = [joints(this.JointType_SpineMid,2); joints(this.JointType_SpineBase,2)];
-            bonesx(:,5) = [joints(this.JointType_SpineShoulder,1); joints(this.JointType_ShoulderRight,1)];
-            bonesy(:,5) = [joints(this.JointType_SpineShoulder,2); joints(this.JointType_ShoulderRight,2)];
-            bonesx(:,6) = [joints(this.JointType_SpineShoulder,1); joints(this.JointType_ShoulderLeft,1)];
-            bonesy(:,6) = [joints(this.JointType_SpineShoulder,2); joints(this.JointType_ShoulderLeft,2)];
-            bonesx(:,7) = [joints(this.JointType_SpineBase,1); joints(this.JointType_HipRight,1)];
-            bonesy(:,7) = [joints(this.JointType_SpineBase,2); joints(this.JointType_HipRight,2)];
-            bonesx(:,8) = [joints(this.JointType_SpineBase,1); joints(this.JointType_HipLeft,1)];
-            bonesy(:,8) = [joints(this.JointType_SpineBase,2); joints(this.JointType_HipLeft,2)];
+            bonesx(:,1) = [joints(this.JointType.Head,1); joints(this.JointType.Neck,1)];
+            bonesy(:,1) = [joints(this.JointType.Head,2); joints(this.JointType.Neck,2)];
+            bonesx(:,2) = [joints(this.JointType.Neck,1); joints(this.JointType.SpineShoulder,1)];
+            bonesy(:,2) = [joints(this.JointType.Neck,2); joints(this.JointType.SpineShoulder,2)];
+            bonesx(:,3) = [joints(this.JointType.SpineShoulder,1); joints(this.JointType.SpineMid,1)];
+            bonesy(:,3) = [joints(this.JointType.SpineShoulder,2); joints(this.JointType.SpineMid,2)];
+            bonesx(:,4) = [joints(this.JointType.SpineMid,1); joints(this.JointType.SpineBase,1)];
+            bonesy(:,4) = [joints(this.JointType.SpineMid,2); joints(this.JointType.SpineBase,2)];
+            bonesx(:,5) = [joints(this.JointType.SpineShoulder,1); joints(this.JointType.ShoulderRight,1)];
+            bonesy(:,5) = [joints(this.JointType.SpineShoulder,2); joints(this.JointType.ShoulderRight,2)];
+            bonesx(:,6) = [joints(this.JointType.SpineShoulder,1); joints(this.JointType.ShoulderLeft,1)];
+            bonesy(:,6) = [joints(this.JointType.SpineShoulder,2); joints(this.JointType.ShoulderLeft,2)];
+            bonesx(:,7) = [joints(this.JointType.SpineBase,1); joints(this.JointType.HipRight,1)];
+            bonesy(:,7) = [joints(this.JointType.SpineBase,2); joints(this.JointType.HipRight,2)];
+            bonesx(:,8) = [joints(this.JointType.SpineBase,1); joints(this.JointType.HipLeft,1)];
+            bonesy(:,8) = [joints(this.JointType.SpineBase,2); joints(this.JointType.HipLeft,2)];
             
             % Right Arm
-            bonesx(:,9) = [joints(this.JointType_ShoulderRight,1); joints(this.JointType_ElbowRight,1)];
-            bonesy(:,9) = [joints(this.JointType_ShoulderRight,2); joints(this.JointType_ElbowRight,2)];
-            bonesx(:,10) = [joints(this.JointType_ElbowRight,1); joints(this.JointType_WristRight,1)];
-            bonesy(:,10) = [joints(this.JointType_ElbowRight,2); joints(this.JointType_WristRight,2)];
-            bonesx(:,11) = [joints(this.JointType_WristRight,1); joints(this.JointType_HandRight,1)];
-            bonesy(:,11) = [joints(this.JointType_WristRight,2); joints(this.JointType_HandRight,2)];
-            bonesx(:,12) = [joints(this.JointType_HandRight,1); joints(this.JointType_HandTipRight,1)];
-            bonesy(:,12) = [joints(this.JointType_HandRight,2); joints(this.JointType_HandTipRight,2)];
-            bonesx(:,13) = [joints(this.JointType_WristRight,1); joints(this.JointType_ThumbRight,1)];
-            bonesy(:,13) = [joints(this.JointType_WristRight,2); joints(this.JointType_ThumbRight,2)];
+            bonesx(:,9) = [joints(this.JointType.ShoulderRight,1); joints(this.JointType.ElbowRight,1)];
+            bonesy(:,9) = [joints(this.JointType.ShoulderRight,2); joints(this.JointType.ElbowRight,2)];
+            bonesx(:,10) = [joints(this.JointType.ElbowRight,1); joints(this.JointType.WristRight,1)];
+            bonesy(:,10) = [joints(this.JointType.ElbowRight,2); joints(this.JointType.WristRight,2)];
+            bonesx(:,11) = [joints(this.JointType.WristRight,1); joints(this.JointType.HandRight,1)];
+            bonesy(:,11) = [joints(this.JointType.WristRight,2); joints(this.JointType.HandRight,2)];
+            bonesx(:,12) = [joints(this.JointType.HandRight,1); joints(this.JointType.HandTipRight,1)];
+            bonesy(:,12) = [joints(this.JointType.HandRight,2); joints(this.JointType.HandTipRight,2)];
+            bonesx(:,13) = [joints(this.JointType.WristRight,1); joints(this.JointType.ThumbRight,1)];
+            bonesy(:,13) = [joints(this.JointType.WristRight,2); joints(this.JointType.ThumbRight,2)];
             
             % Left Arm
-            bonesx(:,14) = [joints(this.JointType_ShoulderLeft,1); joints(this.JointType_ElbowLeft,1)];
-            bonesy(:,14) = [joints(this.JointType_ShoulderLeft,2); joints(this.JointType_ElbowLeft,2)];
-            bonesx(:,15) = [joints(this.JointType_ElbowLeft,1); joints(this.JointType_WristLeft,1)];
-            bonesy(:,15) = [joints(this.JointType_ElbowLeft,2); joints(this.JointType_WristLeft,2)];
-            bonesx(:,16) = [joints(this.JointType_WristLeft,1); joints(this.JointType_HandLeft,1)];
-            bonesy(:,16) = [joints(this.JointType_WristLeft,2); joints(this.JointType_HandLeft,2)];
-            bonesx(:,17) = [joints(this.JointType_HandLeft,1); joints(this.JointType_HandTipLeft,1)];
-            bonesy(:,17) = [joints(this.JointType_HandLeft,2); joints(this.JointType_HandTipLeft,2)];
-            bonesx(:,18) = [joints(this.JointType_WristLeft,1); joints(this.JointType_ThumbLeft,1)];
-            bonesy(:,18) = [joints(this.JointType_WristLeft,2); joints(this.JointType_ThumbLeft,2)];
+            bonesx(:,14) = [joints(this.JointType.ShoulderLeft,1); joints(this.JointType.ElbowLeft,1)];
+            bonesy(:,14) = [joints(this.JointType.ShoulderLeft,2); joints(this.JointType.ElbowLeft,2)];
+            bonesx(:,15) = [joints(this.JointType.ElbowLeft,1); joints(this.JointType.WristLeft,1)];
+            bonesy(:,15) = [joints(this.JointType.ElbowLeft,2); joints(this.JointType.WristLeft,2)];
+            bonesx(:,16) = [joints(this.JointType.WristLeft,1); joints(this.JointType.HandLeft,1)];
+            bonesy(:,16) = [joints(this.JointType.WristLeft,2); joints(this.JointType.HandLeft,2)];
+            bonesx(:,17) = [joints(this.JointType.HandLeft,1); joints(this.JointType.HandTipLeft,1)];
+            bonesy(:,17) = [joints(this.JointType.HandLeft,2); joints(this.JointType.HandTipLeft,2)];
+            bonesx(:,18) = [joints(this.JointType.WristLeft,1); joints(this.JointType.ThumbLeft,1)];
+            bonesy(:,18) = [joints(this.JointType.WristLeft,2); joints(this.JointType.ThumbLeft,2)];
             
             % Right Leg
-            bonesx(:,19) = [joints(this.JointType_HipRight,1); joints(this.JointType_KneeRight,1)];
-            bonesy(:,19) = [joints(this.JointType_HipRight,2); joints(this.JointType_KneeRight,2)];
-            bonesx(:,20) = [joints(this.JointType_KneeRight,1); joints(this.JointType_AnkleRight,1)];
-            bonesy(:,20) = [joints(this.JointType_KneeRight,2); joints(this.JointType_AnkleRight,2)];
-            bonesx(:,21) = [joints(this.JointType_AnkleRight,1); joints(this.JointType_FootRight,1)];
-            bonesy(:,21) = [joints(this.JointType_AnkleRight,2); joints(this.JointType_FootRight,2)];
+            bonesx(:,19) = [joints(this.JointType.HipRight,1); joints(this.JointType.KneeRight,1)];
+            bonesy(:,19) = [joints(this.JointType.HipRight,2); joints(this.JointType.KneeRight,2)];
+            bonesx(:,20) = [joints(this.JointType.KneeRight,1); joints(this.JointType.AnkleRight,1)];
+            bonesy(:,20) = [joints(this.JointType.KneeRight,2); joints(this.JointType.AnkleRight,2)];
+            bonesx(:,21) = [joints(this.JointType.AnkleRight,1); joints(this.JointType.FootRight,1)];
+            bonesy(:,21) = [joints(this.JointType.AnkleRight,2); joints(this.JointType.FootRight,2)];
             
             % Left Leg
-            bonesx(:,22) = [joints(this.JointType_HipLeft,1); joints(this.JointType_KneeLeft,1)];
-            bonesy(:,22) = [joints(this.JointType_HipLeft,2); joints(this.JointType_KneeLeft,2)];
-            bonesx(:,23) = [joints(this.JointType_KneeLeft,1); joints(this.JointType_AnkleLeft,1)];
-            bonesy(:,23) = [joints(this.JointType_KneeLeft,2); joints(this.JointType_AnkleLeft,2)];
-            bonesx(:,24) = [joints(this.JointType_AnkleLeft,1); joints(this.JointType_FootLeft,1)];
-            bonesy(:,24) = [joints(this.JointType_AnkleLeft,2); joints(this.JointType_FootLeft,2)];
+            bonesx(:,22) = [joints(this.JointType.HipLeft,1); joints(this.JointType.KneeLeft,1)];
+            bonesy(:,22) = [joints(this.JointType.HipLeft,2); joints(this.JointType.KneeLeft,2)];
+            bonesx(:,23) = [joints(this.JointType.KneeLeft,1); joints(this.JointType.AnkleLeft,1)];
+            bonesy(:,23) = [joints(this.JointType.KneeLeft,2); joints(this.JointType.AnkleLeft,2)];
+            bonesx(:,24) = [joints(this.JointType.AnkleLeft,1); joints(this.JointType.FootLeft,1)];
+            bonesy(:,24) = [joints(this.JointType.AnkleLeft,2); joints(this.JointType.FootLeft,2)];
             
         end
         
@@ -414,11 +399,11 @@ classdef Kin2 < Kin2_Constants & handle
             % 3) handPos: hand position, obtain from the bodies structure
             % 4) size: Circle radii
             color = [];
-            if handState == this.HandState_Closed
+            if handState == this.HandState.Closed
                 color = 'r';
-            elseif handState == this.HandState_Open
+            elseif handState == this.HandState.Open
                 color = 'g';
-            elseif handState == this.HandState_Lasso
+            elseif handState == this.HandState.Lasso
                 color = 'b';
             end
             
@@ -499,13 +484,13 @@ classdef Kin2 < Kin2_Constants & handle
             % property. This function can be used to display the name of
             % the properties. See method drawFaces for usage example
             switch(detectionResult)
-                case this.DetectionResult_Unknown
+                case this.DetectionResult.Unknown
                     str = 'Unknown';
-                case this.DetectionResult_No
+                case this.DetectionResult.No
                     str = 'No';
-                case this.DetectionResult_Maybe
+                case this.DetectionResult.Maybe
                     str = 'Maybe';
-                case this.DetectionResult_Yes
+                case this.DetectionResult.Yes
                     str = 'Yes';
                 otherwise
                     str = 'Unknown';
@@ -625,8 +610,7 @@ classdef Kin2 < Kin2_Constants & handle
             [varargout{1:nargout}] = Kin2_mex('KF_reset', this.objectHandle, varargin{:});
         end
         
-        end
     end
-    
-    
-    
+end
+
+
