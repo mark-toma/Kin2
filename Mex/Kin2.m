@@ -483,18 +483,9 @@ classdef Kin2 < Kin2_Constants & handle
             % decodeFaceProperties: return description of a numeric face
             % property. This function can be used to display the name of
             % the properties. See method drawFaces for usage example
-            switch(detectionResult)
-                case this.DetectionResult.Unknown
-                    str = 'Unknown';
-                case this.DetectionResult.No
-                    str = 'No';
-                case this.DetectionResult.Maybe
-                    str = 'Maybe';
-                case this.DetectionResult.Yes
-                    str = 'Yes';
-                otherwise
-                    str = 'Unknown';
-            end
+            ind = find(cell2mat(this.DetectionResult(:,2),detectionResult));
+            if isempty(ind), error('Invalid detection result, ''%d''',detectionResult); end
+            str = this.DetectionResult{ind,1};
         end
         
         function drawHDFaces(this,handle,faces,displayPoints,displayText,fontSize)
