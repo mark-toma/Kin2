@@ -47,3 +47,6 @@ Temporary Items
 
 # Development working files
 *_devel_workfile*
+
+# MATLAB autosave files
+*.asv
