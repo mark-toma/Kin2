@@ -5,6 +5,11 @@ classdef Kin2 < Kin2_Constants & handle
         
         % Bodies colors
         bodyColors = ['r','b','g','y','m','c'];
+        
+        % frameSources  Enabled data sources
+        %   Cell array of strings containing the arguments passed to Kin2
+        %   constructor used to initialize Kin2_mex
+        frameSources;
     end
     
     properties (SetAccess = public)
@@ -26,11 +31,13 @@ classdef Kin2 < Kin2_Constants & handle
             %
             
             flags = uint16(0);
-            for spec = varargin
-                inds = strcmp(this.FrameSourceTypes(:,1),spec{:});
+            for spec = varargin{:}
+                inds = strcmp(spec,this.FrameSourceTypes(:,1));
                 if ~any(inds), error('Invalid specifier, ''%s''',spec{:}); end
                 flags = flags + this.FrameSourceTypes{inds,2};
             end
+            
+            this.frameSources = varargin{:};
             
             this.objectHandle = Kin2_mex('new', flags);
             
