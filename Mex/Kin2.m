@@ -1,4 +1,4 @@
-classdef Kin2 < handle
+classdef Kin2 < Kin2_Constants & handle
     %KIN2 MATLAB class wrapper to an underlying C++ Kin2 class
     properties (SetAccess = private, Hidden = true)
         objectHandle; % Handle to the underlying C++ class instance
@@ -12,78 +12,6 @@ classdef Kin2 < handle
         cDepthHeight    = 424;
         cColorWidth     = 1920;
         cColorHeight    = 1080;
-        
-        % Joints constants
-        JointType_SpineBase     = 1;
-        JointType_SpineMid      = 2;
-        JointType_Neck          = 3;
-        JointType_Head          = 4;
-        JointType_ShoulderLeft	= 5;
-        JointType_ElbowLeft     = 6;
-        JointType_WristLeft     = 7;
-        JointType_HandLeft      = 8;
-        JointType_ShoulderRight	= 9;
-        JointType_ElbowRight	= 10;
-        JointType_WristRight	= 11;
-        JointType_HandRight     = 12;
-        JointType_HipLeft       = 13;
-        JointType_KneeLeft      = 14;
-        JointType_AnkleLeft     = 15;
-        JointType_FootLeft      = 16;
-        JointType_HipRight      = 17;
-        JointType_KneeRight     = 18;
-        JointType_AnkleRight	= 19;
-        JointType_FootRight     = 20;
-        JointType_SpineShoulder	= 21;
-        JointType_HandTipLeft	= 22;
-        JointType_ThumbLeft     = 23;
-        JointType_HandTipRight	= 24;
-        JointType_ThumbRight	= 25;
-        JointType_Count         = 25;
-        
-        % Hand State constants
-        HandState_Unknown       = 0,
-        HandState_NotTracked	= 1,
-        HandState_Open          = 2,
-        HandState_Closed        = 3,
-        HandState_Lasso         = 4
-        
-        % Face detection constants
-        DetectionResult_Unknown = 0;
-        DetectionResult_No      = 1;
-        DetectionResult_Maybe	= 2;
-        DetectionResult_Yes     = 3;
-        
-        % Face properties
-        faceProperties = {...
-            'Happy',...
-            'Engaged',...
-            'Wearing Glasses',...
-            'Left eye closed',...
-            'Right eye closed',...
-            'Mouth open',...
-            'Mouth moved',...
-            'Looking away'};
-        
-        % Face Animation units
-        faceAnimationUnits = {...
-            'JawOpen',...
-            'LipPucker',...
-            'JawSlideRight',...
-            'LipStretcherRight',...
-            'LipStretcherLeft',...
-            'LipCornerPullerLeft',...
-            'LipCornerPullerRight',...
-            'LipCornerDepressorLeft',...
-            'LipCornerDepressorRight',...
-            'LeftcheekPuff',...
-            'RightcheekPuff',...
-            'LefteyeClosed',...
-            'RighteyeClosed',...
-            'RighteyebrowLowerer',...
-            'LefteyebrowLowerer',...
-            'LowerlipDepressorLeft',...
-            'LowerlipDepressorRight'};
         
         % Color calibration
         colorCalib = false;
